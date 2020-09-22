@@ -1,4 +1,4 @@
-Comparte Ride
+Platzi
 =============
 
-Group-bounded, invite-only, carpooling platform
+Advanced Django course

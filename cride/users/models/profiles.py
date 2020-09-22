@@ -7,10 +7,31 @@ from django.db import models
 from cride.utils.models import CRideModel
 
 
-class Profiel(CRideModel):
+class Profile(CRideModel):
     """Profile model.
     A profile holds a user's public data like biography, picture,
     and statistics
     """
 
-    users = models.OneToOneField('users.User', )
+    users = models.OneToOneField('users.User', on_delete=models.CASCADE)
+
+    picture = models.ImageField(
+        'profile_picture',
+        upload_to='users/pictures/',
+        blank=True,
+        null=True
+    )
+
+    biography = models.TextField(max_length=500, blank=True)
+
+    # Stats
+    rides_taken = models.PositiveBigIntegerField(default=0)
+    rides_offered = models.PositiveBigIntegerField(default=0)
+    reputation = models.FloatField(
+        default=5.0,
+        help_text="User's reputation based on the rides taken and offered."
+    )
+
+    def __str__(self):
+        """Return users string representation."""
+        return str(self.user)
