@@ -17,38 +17,16 @@ from cride.users.models import Profile
 class UserModelSerializer(serializers.ModelSerializer):
     """User model serializer."""
 
-    class meta:
+    class Meta:
         """Meta class."""
         model = User
-        fields = {
+        fields = (
             'username',
             'first_name',
             'last_name',
             'email',
             'phone_number'
-        }
-
-
-class UserLoginSerializer(serializers.Serializer):
-    """User login serializer.
-    Handle the login request data.
-    """
-
-    email = serializers.EmailField()
-    password = serializers.CharField(min_length=8, max_length=64)
-
-    def validate(self, data):
-        """Check credentials."""
-        user = authenticate(username=data['email'], password=data['password'])
-        if not user:
-            raise serializers.ValidationError('Invalid credentials')
-        self.context['user'] = user
-        return data
-
-    def create(self, data):
-        """Generate or retrieve new token."""
-        token, created = Token.objects.get_or_create(user=self.context['user'])
-        return self.context['user'], token.key
+        )
 
 
 class UserSignUpSerializer(serializers.Serializer):
@@ -86,12 +64,36 @@ class UserSignUpSerializer(serializers.Serializer):
         passwd_conf = data['password_confirmation']
         if passwd != passwd_conf:
             raise serializers.ValidationError("Passwords don't match.")
-        password_validation.Validate_password(passwd)
+        password_validation.validate_password(passwd)
         return data
 
     def create(self, data):
         """Handle user and profile creation."""
         data.pop('password_confirmation')
-        user = User.objects.create_user(**data)
-        profile = Profile.objects.create(user=user)
+        user = User.objects.create_user(**data, is_verified=False)
+        Profile.objects.create(user=user)
         return user
+
+
+class UserLoginSerializer(serializers.Serializer):
+    """User login serializer.
+    Handle the login request data.
+    """
+
+    email = serializers.EmailField()
+    password = serializers.CharField(min_length=8, max_length=64)
+
+    def validate(self, data):
+        """Check credentials."""
+        user = authenticate(username=data['email'], password=data['password'])
+        if not user:
+            raise serializers.ValidationError('Invalid credentials')
+        if not user.is_verified:
+            raise serializers.ValidationError('Account is not activate yet :(')
+        self.context['user'] = user
+        return data
+
+    def create(self, data):
+        """Generate or retrieve new token."""
+        token, created = Token.objects.get_or_create(user=self.context['user'])
+        return self.context['user'], token.key
