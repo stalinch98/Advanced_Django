@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate, password_validation
 from django.core.validators import RegexValidator
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+from django.utils import timezone
+from django.conf import settings
 
 # Django Rest Framework
 from rest_framework import serializers
@@ -14,6 +16,10 @@ from rest_framework.authtoken.models import Token
 # Models
 from cride.users.models import User
 from cride.users.models import Profile
+
+# Utilities
+from datetime import timedelta
+import jwt
 
 
 class UserModelSerializer(serializers.ModelSerializer):
@@ -83,7 +89,7 @@ class UserSignUpSerializer(serializers.Serializer):
         subject = 'Welcome @{}! Verify your account to start using Comparte Ride'.format(user.username)
         from_email = 'Comparte Ride <noreply@comparteride.com>'
         content = render_to_string(
-            'emails/emails/account_verification.html',
+            'emails/users/account_verification.html',
             {'token': verification_token, 'user': user}
         )
         msg = EmailMultiAlternatives(subject, content, from_email, [user.email])
@@ -92,7 +98,14 @@ class UserSignUpSerializer(serializers.Serializer):
 
     def gen_verification_token(self, user):
         """Create JWT token that the user can use to verify its account."""
-        return 'abc'
+        exp_date = timezone.now + timedelta(days=3)
+        paylod = {
+            'user': user.username,
+            'exp': int(exp_date.timestamp()),
+            'type': 'email_confirmation'
+        }
+        token = jwt.encode(paylod, settings.SECRET_KEY, algorithm='HS256')
+        return token.decode()
 
 
 class UserLoginSerializer(serializers.Serializer):
