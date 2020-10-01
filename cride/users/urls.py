@@ -9,6 +9,6 @@ from cride.users.views import (
 )
 
 urlpatterns = [
-    path('users/login/', UserLoginAPIView.as_view(), name='login'),
-    path('users/signup/', UserSignUpAPIView.as_view(), name='signup'),
+    path('emails/login/', UserLoginAPIView.as_view(), name='login'),
+    path('emails/signup/', UserSignUpAPIView.as_view(), name='signup'),
 ]

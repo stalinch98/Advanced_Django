@@ -31,7 +31,7 @@ ROOT_URLCONF = 'config.urls'
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Users & Authentication
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'emails.User'
 
 # Apps
 DJANGO_APPS = [
@@ -48,7 +48,7 @@ THIRD_PARTY_APPS = [
     'rest_framework.authtoken'
 ]
 LOCAL_APPS = [
-    'cride.users.apps.UsersAppConfig',
+    'cride.emails.apps.UsersAppConfig',
     'cride.circles.apps.CirclesAppConfig',
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

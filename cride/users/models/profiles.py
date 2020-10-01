@@ -13,11 +13,11 @@ class Profile(CRideModel):
     and statistics
     """
 
-    user = models.OneToOneField('users.User', on_delete=models.CASCADE)
+    user = models.OneToOneField('emails.User', on_delete=models.CASCADE)
 
     picture = models.ImageField(
         'profile_picture',
-        upload_to='users/pictures/',
+        upload_to='emails/pictures/',
         blank=True,
         null=True
     )
@@ -33,5 +33,5 @@ class Profile(CRideModel):
     )
 
     def __str__(self):
-        """Return users string representation."""
+        """Return emails string representation."""
         return str(self.user)
