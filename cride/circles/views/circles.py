@@ -1,8 +1,11 @@
 """Circle views."""
 
 # Django REST Framework
-from rest_framework import viewsets
+from rest_framework import mixins, viewsets
+
+# Permissions
 from rest_framework.permissions import IsAuthenticated
+from cride.circles.permissions.circles import IsCircleAdmin
 
 # Serializers
 from cride.circles.serializers import CircleModelSerializer
@@ -11,12 +14,14 @@ from cride.circles.serializers import CircleModelSerializer
 from cride.circles.models import Circle, Membership
 
 
-class CircleViewSet(viewsets.ModelViewSet):
-    """Circle view sets."""
+class CircleViewSet(mixins.CreateModelMixin,
+                    mixins.RetrieveModelMixin,
+                    mixins.UpdateModelMixin,
+                    mixins.ListModelMixin,
+                    viewsets.GenericViewSet):
+    """Circle view set."""
 
-    queryset = Circle.objects.all()
     serializer_class = CircleModelSerializer
-    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         """Restrict list to public-only."""
@@ -24,6 +29,13 @@ class CircleViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             return queryset.filter(is_public=True)
         return queryset
+
+    def get_permissions(self):
+        """Assign permissions based on action."""
+        permissions = [IsAuthenticated]
+        if self.action in ['update', 'partial_update']:
+            permissions.append(IsCircleAdmin)
+        return [permission() for permission in permissions]
 
     def perform_create(self, serializer):
         """Assign circle admin."""
