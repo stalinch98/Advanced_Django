@@ -43,7 +43,7 @@ class Circle(CRideModel):
     is_limited = models.BooleanField(
         'limited',
         default=False,
-        help_text='Lmited circles can grow up to a fixed number of members.'
+        help_text='Limited circles can grow up to a fixed number of members.'
     )
     members_limit = models.PositiveIntegerField(
         default=0,
