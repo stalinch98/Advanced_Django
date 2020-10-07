@@ -27,14 +27,15 @@ class Circle(CRideModel):
     )
 
     # Stats
-    rides_taken = models.PositiveIntegerField(default=0)
     rides_offered = models.PositiveIntegerField(default=0)
+    rides_taken = models.PositiveIntegerField(default=0)
 
     verified = models.BooleanField(
         'verified circle',
         default=False,
-        help_text='Verified circles are also know as official communities.'
+        help_text='Verified circles are also known as official communities.'
     )
+
     is_public = models.BooleanField(
         default=True,
         help_text='Public circles are listed in the main page so everyone know about their existence.'
@@ -56,4 +57,5 @@ class Circle(CRideModel):
 
     class Meta(CRideModel.Meta):
         """Meta class."""
+
         ordering = ['-rides_taken', '-rides_offered']

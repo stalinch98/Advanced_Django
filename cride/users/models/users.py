@@ -11,9 +11,8 @@ from cride.utils.models import CRideModel
 
 class User(CRideModel, AbstractUser):
     """User model.
-
     Extend from Django's Abstract User, change the username field
-    to email and add some extra fields
+    to email and add some extra fields.
     """
 
     email = models.EmailField(
@@ -26,19 +25,18 @@ class User(CRideModel, AbstractUser):
 
     phone_regex = RegexValidator(
         regex=r'\+?1?\d{9,15}$',
-        message='Phone number must be entered in the format: +999999999 Up to 15 digits allowed.'
+        message="Phone number must be entered in the format: +999999999. Up to 15 digits allowed."
     )
-
     phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     is_client = models.BooleanField(
-        'client_status',
+        'client',
         default=True,
         help_text=(
-            'Help easily distinguish user and perform queries.'
+            'Help easily distinguish users and perform queries. '
             'Clients are the main type of user.'
         )
     )
@@ -50,7 +48,7 @@ class User(CRideModel, AbstractUser):
     )
 
     def __str__(self):
-        """Return self username."""
+        """Return username."""
         return self.username
 
     def get_short_name(self):

@@ -1,7 +1,7 @@
 """Circle membership views."""
 
 # Django REST Framework
-from rest_framework import viewsets, mixins, status
+from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
@@ -27,7 +27,7 @@ class MembershipViewSet(mixins.ListModelMixin,
     serializer_class = MembershipModelSerializer
 
     def dispatch(self, request, *args, **kwargs):
-        """Verify that circle exists."""
+        """Verify that the circle exists."""
         slug_name = kwargs['slug_name']
         self.circle = get_object_or_404(Circle, slug_name=slug_name)
         return super(MembershipViewSet, self).dispatch(request, *args, **kwargs)
@@ -50,7 +50,6 @@ class MembershipViewSet(mixins.ListModelMixin,
 
     def get_object(self):
         """Return the circle member by using the user's username."""
-
         return get_object_or_404(
             Membership,
             user__username=self.kwargs['pk'],
@@ -66,7 +65,6 @@ class MembershipViewSet(mixins.ListModelMixin,
     @action(detail=True, methods=['get'])
     def invitations(self, request, *args, **kwargs):
         """Retrieve a member's invitations breakdown.
-
         Will return a list containing all the members that have
         used its invitations and another list containing the
         invitations that haven't being used yet.

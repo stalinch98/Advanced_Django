@@ -21,7 +21,7 @@ class MembershipModelSerializer(serializers.ModelSerializer):
     joined_at = serializers.DateTimeField(source='created', read_only=True)
 
     class Meta:
-        """Meta class"""
+        """Meta class."""
 
         model = Membership
         fields = (
@@ -42,11 +42,11 @@ class MembershipModelSerializer(serializers.ModelSerializer):
 
 class AddMemberSerializer(serializers.Serializer):
     """Add member serializer.
-
     Handle the addition of a new member to a circle.
     Circle object must be provided in the context.
     """
-    invitation_code = serializers.CharField(max_length=8)
+
+    invitation_code = serializers.CharField(min_length=8)
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     def validate_user(self, data):
@@ -55,7 +55,8 @@ class AddMemberSerializer(serializers.Serializer):
         user = data
         q = Membership.objects.filter(circle=circle, user=user)
         if q.exists():
-            raise serializers.ValidationError('User is already member of this circle.')
+            raise serializers.ValidationError('User is already member of this circle')
+        return data
 
     def validate_invitation_code(self, data):
         """Verify code exists and that it is related to the circle."""
@@ -78,10 +79,11 @@ class AddMemberSerializer(serializers.Serializer):
         return data
 
     def create(self, data):
-        """Create new cricle member."""
+        """Create new circle member."""
         circle = self.context['circle']
         invitation = self.context['invitation']
         user = data['user']
+
         now = timezone.now()
 
         # Member creation
@@ -103,3 +105,5 @@ class AddMemberSerializer(serializers.Serializer):
         issuer.used_invitations += 1
         issuer.remaining_invitations -= 1
         issuer.save()
+
+        return member

@@ -1,4 +1,5 @@
-"""Circle permission classes."""
+"""Circles permission classes."""
+
 # Django REST Framework
 from rest_framework.permissions import BasePermission
 

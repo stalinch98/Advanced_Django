@@ -1,4 +1,4 @@
-"""Circles permissions classes."""
+"""Circles permission classes."""
 
 # Django REST Framework
 from rest_framework.permissions import BasePermission
@@ -9,9 +9,8 @@ from cride.circles.models import Membership
 
 class IsActiveCircleMember(BasePermission):
     """Allow access only to circle members.
-
     Expect that the views implementing this permission
-    have a 'circle' attribute assigned.
+    have a `circle` attribute assigned.
     """
 
     def has_permission(self, request, view):
