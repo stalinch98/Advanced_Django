@@ -5,11 +5,9 @@ from celery import Celery
 from django.apps import apps, AppConfig
 from django.conf import settings
 
-
 if not settings.configured:
     # set the default Django settings module for the 'celery' program.
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.local')  # pragma: no cover
-
 
 app = Celery('cride')
 # Using a string here means the worker will not have to
