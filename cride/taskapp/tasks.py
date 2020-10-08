@@ -8,14 +8,12 @@ from django.utils import timezone
 
 # Models
 from cride.users.models import User
-from cride.rides.models import Ride
 
 # Celery
 from celery import task
 
 # Utilities
 import jwt
-import time
 from datetime import timedelta
 
 
