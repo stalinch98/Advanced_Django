@@ -14,7 +14,7 @@ router.register(r'circles', circles_views.CircleViewSet, basename='circle')
 router.register(
     r'circles/(?P<slug_name>[-a-zA-Z0-0_]+)/members',
     membership_views.MembershipViewSet,
-    base_name='membership'
+    basename='membership'
 )
 
 urlpatterns = [

@@ -12,7 +12,7 @@ router = DefaultRouter()
 router.register(
     r'circles/(?P<slug_name>[-a-zA-Z0-0_]+)/rides',
     ride_views.RideViewSet,
-    base_name='ride'
+    basename='ride'
 )
 
 urlpatterns = [
